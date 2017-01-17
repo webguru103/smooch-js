@@ -41,7 +41,29 @@ module.exports = function(options) {
         const renderer = new Renderer({
             scriptUrl: '/_assets/smooch.js',
             data: config,
-            embedded: true
+            type: 'embedded'
+        });
+
+        renderer.render(
+            req.path, {}, function(err, html) {
+                if (err) {
+                    res.statusCode = 500;
+                    res.contentType = 'text; charset=utf8';
+                    res.end(err.message);
+                    return;
+                }
+                res.contentType = 'text/html; charset=utf8';
+                res.end(html);
+            }
+        );
+    });
+
+
+    app.get('/iframe', function(req, res) {
+        var renderer = new Renderer({
+            scriptUrl: '/_assets/smooch.js',
+            data: config,
+            type: 'iframe'
         });
 
         renderer.render(
@@ -60,9 +82,10 @@ module.exports = function(options) {
 
     // application
     app.get('/*', function(req, res) {
-        const renderer = new Renderer({
-            scriptUrl: '/_assets/smooch.js',
-            data: config
+        var renderer = new Renderer({
+            scriptUrl: '/_assets/loader.js',
+            data: config,
+            type: 'html'
         });
 
         renderer.render(

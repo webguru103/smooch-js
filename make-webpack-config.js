@@ -21,7 +21,8 @@ module.exports = function(options) {
     const entry = options.assetsOnly ? {
         assets: './src/js/constants/assets'
     } : {
-        smooch: ['./src/js/utils/polyfills', './src/js/umd']
+        smooch: ['./src/js/utils/polyfills', './src/js/umd'],
+        loader: './src/js/umd-loader'
     };
 
     if (options.hotComponents && !options.assetsOnly) {
@@ -92,7 +93,7 @@ module.exports = function(options) {
             stylesheetLoader = stylesheetLoader.join('!');
         }
 
-        stylesheetLoaders[ext] = 'style/useable!' + stylesheetLoader;
+        stylesheetLoaders[ext] = stylesheetLoader;
     });
 
     if (options.minimize) {

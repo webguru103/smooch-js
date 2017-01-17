@@ -19,6 +19,7 @@ import { hasChannels } from '../utils/app';
 import { DISPLAY_STYLE } from '../constants/styles';
 import { WIDGET_STATE } from '../constants/app';
 import { disableAnimation } from '../actions/app-state-actions';
+import style from '../../stylesheets/main.less';
 
 export class WidgetComponent extends Component {
     static propTypes = {
@@ -119,6 +120,7 @@ export class WidgetComponent extends Component {
         }
 
         return <div>
+                   <style dangerouslySetInnerHTML={ {    __html: style} }></style>
                    <div id='sk-container'
                         className={ classNames.join(' ') }
                         onTouchStart={ this.onTouchStart }

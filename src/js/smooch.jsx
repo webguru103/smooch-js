@@ -27,7 +27,6 @@ import { playNotificationSound, isAudioSupported } from './utils/sound';
 import { getDeviceId } from './utils/device';
 import { getIntegration, hasChannels } from './utils/app';
 
-import { stylesheet } from './constants/assets';
 import { VERSION } from './constants/version';
 import { WIDGET_STATE } from './constants/app';
 
@@ -35,7 +34,6 @@ import { Root } from './root';
 
 
 function renderWidget(container) {
-    stylesheet.use();
     if (container) {
         render(<Root store={ store } />, container);
         return container;
@@ -115,7 +113,8 @@ export class Smooch {
         return observable.off(...arguments);
     }
 
-    init(props) {
+    init({container, ...props}) {
+        this.container = container;
         props = {
             imageUploadEnabled: true,
             soundNotificationEnabled: true,
@@ -245,7 +244,7 @@ export class Smooch {
         }).then(() => {
             if (!store.getState().appState.embedded) {
                 if (!this._container) {
-                    this._container = this.render();
+                    this._container = this.render(this.container);
                 }
             }
 
@@ -327,7 +326,6 @@ export class Smooch {
         delete this._container;
         observable.trigger('destroy');
         observable.off();
-        stylesheet.unuse();
     }
 
     open() {
