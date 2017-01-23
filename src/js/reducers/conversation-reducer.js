@@ -102,7 +102,7 @@ const cleanUpMessages = (messages) => {
     messages.forEach((message) => {
         const key = message._id + message.role + message.mediaType;
         const hasText = (message.text && !!message.text.trim()) || (message.mediaUrl && !!message.mediaUrl.trim());
-        if (!(key in messagesHash) && hasText) {
+        if (!(key in messagesHash) && (hasText || (!hasText && message.actions && message.actions.length > 0)) ) {
             messagesHash[key] = message;
             cleanedMessages.push(message);
         }

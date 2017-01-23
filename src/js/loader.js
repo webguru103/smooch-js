@@ -63,7 +63,9 @@ function proxyCalls(obj) {
                                 const [props] = args;
                                 return _Smooch.init({
                                     ...props,
-                                    container: el
+                                    container: el,
+                                    document,
+                                    hostContext: global
                                 });
                             });
                         }

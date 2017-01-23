@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import StripeCheckout from 'react-stripe-checkout';
+import StripeCheckout from '../lib/react-stripe-checkout';
 import { connect } from 'react-redux';
 
 import { store } from '../stores/app-store';
@@ -12,6 +12,10 @@ import { getIntegration } from '../utils/app';
 import { LoadingComponent } from './loading';
 
 export class ActionComponent extends Component {
+    static contextTypes= {
+        document: PropTypes.object,
+        hostContext: PropTypes.object
+    };
 
     static propTypes = {
         text: PropTypes.string.isRequired,
@@ -88,6 +92,10 @@ export class ActionComponent extends Component {
 
         return Promise.all(promises);
     }
+    onStripeScriptLoaded = () => {
+        const {hostContext} = this.context;
+        global.StripeCheckout = hostContext.StripeCheckout;
+    };
 
     onStripeClick(e) {
         e.preventDefault();
@@ -106,6 +114,7 @@ export class ActionComponent extends Component {
 
     render() {
         const {buttonColor, amount, currency, text, uri, type, actionPaymentCompletedText, integrations, stripe} = this.props;
+        const {document} = this.context;
         const {state} = this.state;
 
         const stripeIntegration = getIntegration(integrations, 'stripeConnect');
@@ -126,6 +135,7 @@ export class ActionComponent extends Component {
             if (state === 'offered') {
                 return <StripeCheckout componentClass='div'
                                        className='sk-action'
+                                       onScriptLoaded={ this.onStripeScriptLoaded }
                                        token={ this.onStripeToken.bind(this) }
                                        stripeKey={ stripeIntegration.publicKey }
                                        email={ user.email }
@@ -133,7 +143,8 @@ export class ActionComponent extends Component {
                                        currency={ currency.toUpperCase() }
                                        name={ stripeAccount.appName }
                                        image={ stripeAccount.iconUrl }
-                                       closed={ this.onStripeClose.bind(this) }>
+                                       closed={ this.onStripeClose.bind(this) }
+                                       document={ document }>
                            <a className='btn btn-sk-primary'
                               onClick={ this.onStripeClick.bind(this) }
                               style={ style }>

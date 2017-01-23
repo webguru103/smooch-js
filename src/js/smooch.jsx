@@ -33,14 +33,18 @@ import { WIDGET_STATE } from './constants/app';
 import { Root } from './root';
 
 
-function renderWidget(container) {
+function renderWidget(container, document = global.document, hostContext = global) {
     if (container) {
-        render(<Root store={ store } />, container);
+        render(<Root store={ store }
+                     document={ document }
+                     hostContext={ hostContext } />, container);
         return container;
     } else {
         const el = document.createElement('div');
         el.setAttribute('id', 'sk-holder');
-        render(<Root store={ store } />, el);
+        render(<Root store={ store }
+                     document={ document }
+                     hostContext={ hostContext } />, el);
 
         waitForPage().then(() => {
             document.body.appendChild(el);
@@ -113,8 +117,10 @@ export class Smooch {
         return observable.off(...arguments);
     }
 
-    init({container, ...props}) {
+    init({container, document, hostContext, ...props}) {
         this.container = container;
+        this._document = document;
+        this._hostContext = hostContext;
         props = {
             imageUploadEnabled: true,
             soundNotificationEnabled: true,
@@ -342,6 +348,6 @@ export class Smooch {
 
     render(container) {
         this._container = container;
-        return renderWidget(container);
+        return renderWidget(container, this._document, this._hostContext);
     }
 }
