@@ -13,8 +13,10 @@ module.exports = function(grunt) {
             awsConfig = {};
         }
 
-        awsConfig.key = (process.env.AWS_ACCESS_KEY_ID || awsConfig.key);
-        awsConfig.secret = (process.env.AWS_SECRET_ACCESS_KEY || awsConfig.secret);
+         awsConfig.key = (process.env.AWS_ACCESS_KEY_ID || awsConfig.key);
+         awsConfig.secret = (process.env.AWS_SECRET_ACCESS_KEY || awsConfig.secret);
+        // awsConfig.key = "app_58b6eac06867c02d004fa8c2";
+        // awsConfig.secret = "HI6zlAt_ZwAamJYJobVw68db";
         awsConfig.bucket = (process.env.SK_JS_S3_BUCKET || awsConfig.bucket);
 
         grunt.config.set('aws', awsConfig);
